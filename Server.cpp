@@ -66,7 +66,7 @@ int main()
 				出力
 				送信メッセージ入力
 				*/
-			
+			//わかんね
 			int ret = sendto(sock, toBuffer, strlen(toBuffer) + 1, 0);	// 終端の\0も送る
 			if (ret != strlen(toBuffer) + 1)
 			{
