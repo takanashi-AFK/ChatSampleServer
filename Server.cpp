@@ -62,7 +62,16 @@ int main()
 				送信メッセージ入力
 				*/
 			//わかんね
-			ret = sendto(UDPSocket, Buffer, strlen(Buffer), 0, (SOCKADDR*)&fromAddr, sizeof(fromAddr));	// 終端の\0も送る
+
+
+			SOCKADDR_IN toAddr;	// 送信先ソケットアドレス情報を格納する領域
+			memset(&toAddr, 0, sizeof(toAddr));
+			toAddr.sin_family = AF_INET;                // IPv4アドレス
+			toAddr.sin_port = htons(portNum);            // サーバのポート番号
+			inet_pton(AF_INET, "192.168.43.253", &toAddr.sin_addr.s_addr);      // サーバのIPアドレス
+			int fromlen = sizeof(toAddr);
+
+			ret = sendto(UDPSocket, Buffer, strlen(Buffer), 0, (SOCKADDR*)&toAddr, sizeof(toAddr));	// 終端の\0も送る
 			if (ret != strlen(Buffer))
 			{
 				cout << WSAGetLastError();
