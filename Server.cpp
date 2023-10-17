@@ -31,21 +31,13 @@ int main()
 	}
 	cout << "socket is completed" << endl;;
 
-
-	std::string serverIpAddress;
-	std::cout << "Input Server IPv4 address :";
-	std::cin >> serverIpAddress;
-
 	// ソケットアドレス構造体を用意
-
 	SOCKADDR_IN	bindAddr;
 	memset(&bindAddr, 0, sizeof(bindAddr));	// 0クリアで初期化
 
 	bindAddr.sin_family = AF_INET;					// IPv4アドレス使用
 	bindAddr.sin_port = htons(portNum);			// ポート番号指定
 	bindAddr.sin_addr.s_addr = htonl(INADDR_ANY);	// すべての自分のNICが対象
-
-	inet_pton(AF_INET, serverIpAddress.c_str(), &bindAddr.sin_addr.s_addr);
 
 	// ソケットアドレス情報割り当て
 	if (bind(sock, (SOCKADDR*)&bindAddr, sizeof(bindAddr)) == SOCKET_ERROR)
