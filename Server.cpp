@@ -56,7 +56,6 @@ int main()
 			cout << Buffer<< endl;
 
 			cout << "送信するメッセージ:";
-			
 			cin >>Buffer;
 				/*
 				出力
