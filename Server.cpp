@@ -39,6 +39,8 @@ int main()
 	bindAddr.sin_port = htons(portNum);			// ポート番号指定
 	bindAddr.sin_addr.s_addr = htonl(INADDR_ANY);	// すべての自分のNICが対象
 
+
+
 	// ソケットアドレス情報割り当て
 	if (bind(sock, (SOCKADDR*)&bindAddr, sizeof(bindAddr)) == SOCKET_ERROR)
 	{
@@ -59,8 +61,8 @@ int main()
 				cout << WSAGetLastError();
 			}
 
-			cout << fromBuffer << endl;
 			cout << "送信するメッセージ:";
+			cout << fromBuffer << endl;
 			
 			cin >>toBuffer;
 				/*
@@ -68,7 +70,7 @@ int main()
 				送信メッセージ入力
 				*/
 			//わかんね
-			int ret = sendto(sock, toBuffer, strlen(toBuffer), 0, (SOCKADDR*)&toAddr, sizeof(toAddr));	// 終端の\0も送る
+			ret = sendto(sock, toBuffer, strlen(toBuffer), 0, (SOCKADDR*)&toAddr, sizeof(toAddr));	// 終端の\0も送る
 			if (ret != strlen(toBuffer) + 1)
 			{
 				cout << WSAGetLastError();
