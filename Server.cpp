@@ -20,7 +20,8 @@ int main()
 		cout << WSAGetLastError();
 		return -1;
 	}
-	cout << "WSAStartup is completed" << endl;;
+	cout << "WSAStartup is completed" << endl;
+
 	// UDPリスンソケットの作成
 	SOCKET	sock;
 	if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
@@ -30,13 +31,21 @@ int main()
 	}
 	cout << "socket is completed" << endl;;
 
+
+	std::string serverIpAddress;
+	std::cout << "Input Server IPv4 address :";
+	std::cin >> serverIpAddress;
+
 	// ソケットアドレス構造体を用意
+
 	SOCKADDR_IN	bindAddr;
 	memset(&bindAddr, 0, sizeof(bindAddr));	// 0クリアで初期化
 
 	bindAddr.sin_family = AF_INET;					// IPv4アドレス使用
 	bindAddr.sin_port = htons(portNum);			// ポート番号指定
 	bindAddr.sin_addr.s_addr = htonl(INADDR_ANY);	// すべての自分のNICが対象
+
+	inet_pton(AF_INET, serverIpAddress.c_str(), &bindAddr.sin_addr.s_addr);
 
 	// ソケットアドレス情報割り当て
 	if (bind(sock, (SOCKADDR*)&bindAddr, sizeof(bindAddr)) == SOCKET_ERROR)
@@ -50,9 +59,9 @@ int main()
 			char fromBuffer[1024];		// 受信文字列の格納領域
 			char toBuffer[1024];	// 送信文字列の格納領域
 
-			SOCKADDR_IN fromAddr;	// 送信元ソケットアドレス情報を格納する領域
-			int fromlen = sizeof(fromAddr);
-			int ret = recvfrom(sock, fromBuffer, sizeof(fromBuffer), 0, (SOCKADDR*)&fromAddr, &fromlen);
+			SOCKADDR_IN toAddr;	// 送信先ソケットアドレス情報を格納する領域
+			int fromlen = sizeof(toAddr);
+			int ret = recvfrom(sock, fromBuffer, sizeof(fromBuffer), 0, (SOCKADDR*)&toAddr, &fromlen);
 			if (ret == SOCKET_ERROR)
 			{
 				cout << WSAGetLastError();
@@ -67,16 +76,19 @@ int main()
 				送信メッセージ入力
 				*/
 			//わかんね
-			int ret = sendto(sock, toBuffer, strlen(toBuffer) + 1, 0);	// 終端の\0も送る
+			int ret = sendto(sock, toBuffer, strlen(toBuffer), 0, (SOCKADDR*)&toAddr, sizeof(toAddr));	// 終端の\0も送る
 			if (ret != strlen(toBuffer) + 1)
 			{
-				// エラー処理
+				cout << WSAGetLastError();
 			}
-			
-			sendto();		// 送信
+
+			cout << "complete" << endl;
 		}
 
 
-		closesocket();	// ソケット破棄
-			WSACleanup();	// WinSock終了処理
+		if (closesocket(sock) == SOCKET_ERROR)
+		{
+			cout << WSAGetLastError();
+		}
+		WSACleanup();	// WinSock終了処理
 }
