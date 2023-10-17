@@ -47,7 +47,7 @@ int main()
 			fromAddr.sin_port = htons(portNum);            // サーバのポート番号
 			inet_pton(AF_INET, "192.168.43.253", &fromAddr.sin_addr.s_addr);      // サーバのIPアドレス
 			int fromlen = sizeof(fromAddr);
-			int ret = recvfrom(sock, Buffer, sizeof(Buffer)-1, 0, (SOCKADDR*)&fromAddr, &fromlen);
+			int ret = recvfrom(UDPSocket, Buffer, sizeof(Buffer)-1, 0, (SOCKADDR*)&fromAddr, &fromlen);
 			Buffer[ret] = '\0';
 			if (ret == SOCKET_ERROR)
 			{
@@ -63,7 +63,7 @@ int main()
 				送信メッセージ入力
 				*/
 			//わかんね
-			ret = sendto(sock, Buffer, strlen(Buffer), 0, (SOCKADDR*)&fromAddr, sizeof(fromAddr));	// 終端の\0も送る
+			ret = sendto(UDPSocket, Buffer, strlen(Buffer), 0, (SOCKADDR*)&fromAddr, sizeof(fromAddr));	// 終端の\0も送る
 			if (ret != strlen(Buffer))
 			{
 				cout << WSAGetLastError();
@@ -71,7 +71,7 @@ int main()
 		}
 
 
-		if (closesocket(sock) == SOCKET_ERROR)
+		if (closesocket(UDPSocket) == SOCKET_ERROR)
 		{
 			cout << WSAGetLastError();
 		}
